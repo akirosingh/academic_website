@@ -1,0 +1,22 @@
+---
+title: Test post
+author: R package build
+date: '2021-05-17'
+slug: test-post
+categories:
+  - R
+tags:
+  - R Markdown
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-05-17T09:56:50-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+Testing a new post
