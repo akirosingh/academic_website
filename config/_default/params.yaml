@@ -14,7 +14,7 @@ font_size: L
 
 site_type: Person
 local_business_type: ''
-org_name: ''
+org_name: 'Stanford University'
 description: ''
 twitter: ''
 
@@ -23,37 +23,20 @@ twitter: ''
 email: adamsk@stanford.edu
 phone: 7023500660
 address:
-  street: 450 Serra Mall
+  street: 240 Pasteur Dr
   city: Stanford
   region: CA
-  postcode: '94305'
+  postcode: '94304'
   country: United States
   country_code: US
 coordinates:
-  latitude: '37.4275'
-  longitude: '-122.1697'
-directions: Enter Building 1 and take the stairs to Office 200 on Floor 2
+  latitude: '37.432692'
+  longitude: '-122.176942'
+directions: Take the stairs to Floor 3 and walk to suite 3400
 office_hours:
   - 'Monday 10:00 to 13:00'
   - 'Wednesday 09:00 to 10:00'
-appointment_url: 'https://calendly.com'
-contact_links:
-  - icon: twitter
-    icon_pack: fab
-    name: DM Me
-    link: 'https://twitter.com/Twitter'
-  - icon: skype
-    icon_pack: fab
-    name: Skype Me
-    link: 'skype:echo123?call'
-  - icon: keybase
-    icon_pack: fab
-    name: Chat on Keybase
-    link: 'https://keybase.io/'
-  - icon: comments
-    icon_pack: fas
-    name: Discuss on Forum
-    link: 'https://discourse.gohugo.io'
+appointment_url: 'https://calendar.x.ai/askadam/'
 
 # Site header
 
