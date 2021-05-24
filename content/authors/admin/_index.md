@@ -14,7 +14,7 @@ organizations:
   url: https://www.stanford.edu/
 
 # Short bio (displayed in user profile at end of posts)
-bio: My research interests include characterizing i.
+bio: I'm a PhD Student in Microbiology & Immunology at Stanford University studying acquired immunity to malaria in pregnant women.
 
 # Interests to show in About widget
 interests:
@@ -41,7 +41,6 @@ social:
 - icon: envelope
   icon_pack: fas
   link: '/#contact'
-
 - icon: graduation-cap  # Alternatively, use `google-scholar` icon from `ai` icon pack
   icon_pack: fas
   link: https://scholar.google.com/citations?user=9MvwMykAAAAJ&hl=en
@@ -66,7 +65,7 @@ email: ""
 highlight_name: false
 ---
 
-Adam Kirosingh (CURE:Oh:Sing) is currently a PhD candidate in the [Jagannathan lab](https://med.stanford.edu/jagannathan-lab.html) working to uncover the immune mechanisms behind maternal immunity to malaria through successive pregnancies. By generating large datasets from patient samples I hope to drive hypothesis driven experiments to inform vaccination efforts to protect pregnant mothers and their children.
+Adam Kirosingh (CURE:Oh:Sing) is currently a PhD candidate in the [Jagannathan lab](https://med.stanford.edu/jagannathan-lab.html) working to uncover the immune mechanisms behind maternal immunity to malaria through successive pregnancies. By generating large datasets from patient samples  to drive hypothesis driven experiments he will guide vaccination efforts to protect pregnant mothers and their children.
 
 What you won't find out on his {{< staticref "media/CV.pdf" "newtab" >}}CV{{< /staticref >}} is that Adam enjoys [rock climbing](https://instagram.com/memoradam), [reading](https://www.goodreads.com/user/show/51047534-adam-kirosingh), and [being outdoors](https://www.strava.com/athletes/15203384).
 
