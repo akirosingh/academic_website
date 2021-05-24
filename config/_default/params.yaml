@@ -5,7 +5,7 @@
 
 # Appearance
 
-theme: minimal
+theme: ocean
 day_night: true
 font: ''
 font_size: L
@@ -15,7 +15,7 @@ font_size: L
 site_type: Person
 local_business_type: 'Academic Research University'
 org_name: 'Stanford University'
-description: 'Data Science, Research, Immunology, Microbiology, Malaria'
+description: 'A data science blog and portfolio by Adam Kirosingh'
 # twitter: ''
 
 # Contact (edit or remove options as required)
