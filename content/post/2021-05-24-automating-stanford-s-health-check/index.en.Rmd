@@ -1,0 +1,21 @@
+---
+title: Automating Stanford's Health Check
+author: Adam Kirosingh
+date: '2021-05-24'
+slug: automating-stanford-s-health-check
+categories:
+  - Python
+tags:
+  - Automation
+  - Workflow
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-05-24T11:16:22-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---

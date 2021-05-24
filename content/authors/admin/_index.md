@@ -14,7 +14,7 @@ organizations:
   url: https://www.stanford.edu/
 
 # Short bio (displayed in user profile at end of posts)
-bio: I'm a PhD Student in Microbiology & Immunology at Stanford University studying acquired immunity to malaria in pregnant women.
+
 
 # Interests to show in About widget
 interests:
