@@ -70,4 +70,4 @@ Adam Kirosingh (CURE:Oh:Sing) is currently a PhD candidate in the [Jagannathan l
 
 What you won't find out on his {{< staticref "media/CV.pdf" "newtab" >}}CV{{< /staticref >}} is that Adam enjoys [rock climbing](https://instagram.com/memoradam), [reading](https://www.goodreads.com/user/show/51047534-adam-kirosingh), and [being outdoors](https://www.strava.com/athletes/15203384).
 
-.
+
