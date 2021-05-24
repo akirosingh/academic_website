@@ -27,7 +27,7 @@ education:
   courses:
   - course: PhD in Microbiology & Immunology
     institution: Stanford University
-    year: 2022
+    year: 2023
   - course: BSc in Molecular Microbiology & Immunology
     institution: University of Nevada, Reno
     year: 2017
