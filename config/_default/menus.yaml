@@ -14,9 +14,9 @@ main:
   #   url: '#featured'
   #   weight: 50
   - name: Posts
-    url: posts/
+    url: post/
     weight: 20
   - name: CV
-    url: cv/
+    url: media/CV.pdf
     weight: 30
 
