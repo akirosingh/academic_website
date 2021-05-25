@@ -19,9 +19,134 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
+editor_options: 
+  chunk_output_type: console
 ---
 I've been recording the books that I've read in a csv since 2017 and decided to switch over to using the Goodreads website in 2019. While I don't find Goodreads particularly great at recommmending books, I do like the idea of using the data available to better understand reading habits. Before I would painstakingly add genre information and fill out information about the author and book for each entry, but goodreads provides a simple way to [export your data](https://help.goodreads.com/s/article/How-do-I-import-or-export-my-books-1553870934590).  
 
-In addition, Paul Klinger made a nice [python script](https://github.com/PaulKlinger/Enhance-GoodReads-Export) to scrap genre information from the website.
+```{r include = F}
+library(readr)
+library(here)
+library(tidyverse)
+library(forcats)
+library(viridis)
+require(reshape2)
+require(plyr)
+require(scales)
+library(xts)
+```
+
+In order to make the most of the data exported from Goodreads, Paul Klinger made a nice [python script](https://github.com/PaulKlinger/Enhance-GoodReads-Export) to scrap genre information from the website.
+
+## Import the data 
+```{r echo = T, warning=F,message=F}
+Booklist <-
+  read_csv(
+    here::here(
+      "content",
+      "post",
+      "2021-05-24-what-does-your-goodreads-library-say-about-you",
+      "goodreads_library_export.csv"
+    )
+  )
+```
+
+## Tidy the data
+```{r echo = T}
+read_Booklist <- Booklist %>%
+  subset(Booklist$`Exclusive Shelf` == "read") %>%
+  mutate(genre_quorum = sub("\\|.*", "", genres))
+
+short_Booklist <- read_Booklist %>%
+  subset(read_Booklist$Author %in% names(sort(table(Booklist$Author), decreasing = T))[1:30])
+
+#Turning Completion date into a date format R can recognize
+read_Booklist$`Date Added`  <- as.Date(read_Booklist$`Date Added`,
+                                       format = "%y-%m-%d")
+
+read_Booklist$yearmonth <- as.yearmon(read_Booklist$`Date Added`)
+read_Booklist$yearmonthf <- factor(read_Booklist$`Date Added`)
+#Making a Week number column
+read_Booklist$week <-
+  as.numeric(strftime(read_Booklist$`Date Added`, format = "%V"))
+# Making a month number column then creating a factor abbreviated month column. I found the factor step necessary to maintain order
+read_Booklist$month <-
+  as.numeric(strftime(read_Booklist$`Date Added`, format = "%m"))
+read_Booklist$monthf <-
+  factor(
+    read_Booklist$month,
+    levels = as.character(1:12),
+    labels = c(
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ),
+    ordered = TRUE
+  )
+#Repeating above for weekdays
+read_Booklist$weekday <-
+  strftime(read_Booklist$`Date Added`, format = "%w")
+read_Booklist$weekdayf <-
+  factor(
+    read_Booklist$weekday,
+    levels = rev(0:6),
+    labels = rev(c(
+      "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+    )),
+    ordered = TRUE
+  )
+read_Booklist$year <-
+  strftime(read_Booklist$`Date Added`, format = "%Y")
+
+summarized_Booklist <- read_Booklist %>%
+  group_by(genre_quorum) %>%
+  dplyr::summarise(Count = n()) %>%
+  arrange(-Count)
+
+
+calendar <- read_Booklist %>%
+  mutate(monthweek = 1 + week - min(week)) %>%
+  subset(year > 2017) %>%
+  mutate(genre_quorum= factor(genre_quorum,levels = summarized_Booklist$genre_quorum))
+```
+
+## What genres do I tend to reads?
+
+```{r genres, echo = T}
+ggplot(data=read_Booklist, aes(x=fct_infreq(genre_quorum))) +
+  geom_bar(stat="count",fill=c(viridis(33)))+ ylab("Number of Books")+ xlab("Goodreads Genre")+ ggtitle("Distribution of the genre of books I read") + theme_bw()  + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust =0.5))
+```
+
+
+
+## What's my favorite author?
+```{r echo = T}
+ggplot(data=short_Booklist, aes(x=fct_infreq(Author))) +
+  geom_bar(stat="count",fill=c(viridis(29)))+ ylab("Number of Books")+ xlab("Author")+ ggtitle("Authors I've read multiple times") + theme_bw()  + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust =0.5))
+```
+
+
+
+## What do my readings look like?
+```{r echo = T}
+ggplot(calendar, aes(monthweek, weekdayf)) +
+  geom_tile(colour = "white", aes(fill = genre_quorum)) +
+  facet_grid(year ~ monthf, scales = "free") +
+  labs(x = "Week of Month",
+       y = "",
+       title = "Finished Books Heatmap",
+       subtitle = "Colored by book genre frequency",
+       fill = "genre_quorum") + theme_bw() +  scale_fill_viridis_d() +theme(legend.position = "none", axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+
 
 If you're interested in questions like, how does my ratings differ than the average or how many pages did I read last year, then try importing your csv into [Paul Klinger's website](https://almoturg.com/bookstats/). 

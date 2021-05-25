@@ -19,11 +19,116 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
+editor_options: 
+  chunk_output_type: console
 ---
 
 <script src="{{< blogdown/postref >}}index.en_files/header-attrs/header-attrs.js"></script>
 
 
 <p>I’ve been recording the books that I’ve read in a csv since 2017 and decided to switch over to using the Goodreads website in 2019. While I don’t find Goodreads particularly great at recommmending books, I do like the idea of using the data available to better understand reading habits. Before I would painstakingly add genre information and fill out information about the author and book for each entry, but goodreads provides a simple way to <a href="https://help.goodreads.com/s/article/How-do-I-import-or-export-my-books-1553870934590">export your data</a>.</p>
-<p>In addition, Paul Klinger made a nice <a href="https://github.com/PaulKlinger/Enhance-GoodReads-Export">python script</a> to scrap genre information from the website.</p>
+<p>In order to make the most of the data exported from Goodreads, Paul Klinger made a nice <a href="https://github.com/PaulKlinger/Enhance-GoodReads-Export">python script</a> to scrap genre information from the website.</p>
+<div id="import-the-data" class="section level2">
+<h2>Import the data</h2>
+<pre class="r"><code>Booklist &lt;-
+  read_csv(
+    here::here(
+      &quot;content&quot;,
+      &quot;post&quot;,
+      &quot;2021-05-24-what-does-your-goodreads-library-say-about-you&quot;,
+      &quot;goodreads_library_export.csv&quot;
+    )
+  )</code></pre>
+</div>
+<div id="tidy-the-data" class="section level2">
+<h2>Tidy the data</h2>
+<pre class="r"><code>read_Booklist &lt;- Booklist %&gt;%
+  subset(Booklist$`Exclusive Shelf` == &quot;read&quot;) %&gt;%
+  mutate(genre_quorum = sub(&quot;\\|.*&quot;, &quot;&quot;, genres))
+
+short_Booklist &lt;- read_Booklist %&gt;%
+  subset(read_Booklist$Author %in% names(sort(table(Booklist$Author), decreasing = T))[1:30])
+
+#Turning Completion date into a date format R can recognize
+read_Booklist$`Date Added`  &lt;- as.Date(read_Booklist$`Date Added`,
+                                       format = &quot;%y-%m-%d&quot;)
+
+read_Booklist$yearmonth &lt;- as.yearmon(read_Booklist$`Date Added`)
+read_Booklist$yearmonthf &lt;- factor(read_Booklist$`Date Added`)
+#Making a Week number column
+read_Booklist$week &lt;-
+  as.numeric(strftime(read_Booklist$`Date Added`, format = &quot;%V&quot;))
+# Making a month number column then creating a factor abbreviated month column. I found the factor step necessary to maintain order
+read_Booklist$month &lt;-
+  as.numeric(strftime(read_Booklist$`Date Added`, format = &quot;%m&quot;))
+read_Booklist$monthf &lt;-
+  factor(
+    read_Booklist$month,
+    levels = as.character(1:12),
+    labels = c(
+      &quot;Jan&quot;,
+      &quot;Feb&quot;,
+      &quot;Mar&quot;,
+      &quot;Apr&quot;,
+      &quot;May&quot;,
+      &quot;Jun&quot;,
+      &quot;Jul&quot;,
+      &quot;Aug&quot;,
+      &quot;Sep&quot;,
+      &quot;Oct&quot;,
+      &quot;Nov&quot;,
+      &quot;Dec&quot;
+    ),
+    ordered = TRUE
+  )
+#Repeating above for weekdays
+read_Booklist$weekday &lt;-
+  strftime(read_Booklist$`Date Added`, format = &quot;%w&quot;)
+read_Booklist$weekdayf &lt;-
+  factor(
+    read_Booklist$weekday,
+    levels = rev(0:6),
+    labels = rev(c(
+      &quot;Sun&quot;, &quot;Mon&quot;, &quot;Tue&quot;, &quot;Wed&quot;, &quot;Thu&quot;, &quot;Fri&quot;, &quot;Sat&quot;
+    )),
+    ordered = TRUE
+  )
+read_Booklist$year &lt;-
+  strftime(read_Booklist$`Date Added`, format = &quot;%Y&quot;)
+
+summarized_Booklist &lt;- read_Booklist %&gt;%
+  group_by(genre_quorum) %&gt;%
+  dplyr::summarise(Count = n()) %&gt;%
+  arrange(-Count)
+
+
+calendar &lt;- read_Booklist %&gt;%
+  mutate(monthweek = 1 + week - min(week)) %&gt;%
+  subset(year &gt; 2017) %&gt;%
+  mutate(genre_quorum= factor(genre_quorum,levels = summarized_Booklist$genre_quorum))</code></pre>
+</div>
+<div id="what-genres-do-i-tend-to-reads" class="section level2">
+<h2>What genres do I tend to reads?</h2>
+<pre class="r"><code>ggplot(data=read_Booklist, aes(x=fct_infreq(genre_quorum))) +
+  geom_bar(stat=&quot;count&quot;,fill=c(viridis(33)))+ ylab(&quot;Number of Books&quot;)+ xlab(&quot;Goodreads Genre&quot;)+ ggtitle(&quot;Distribution of the genre of books I read&quot;) + theme_bw()  + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust =0.5))</code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/genres-1.png" width="672" /></p>
+</div>
+<div id="whats-my-favorite-author" class="section level2">
+<h2>What’s my favorite author?</h2>
+<pre class="r"><code>ggplot(data=short_Booklist, aes(x=fct_infreq(Author))) +
+  geom_bar(stat=&quot;count&quot;,fill=c(viridis(29)))+ ylab(&quot;Number of Books&quot;)+ xlab(&quot;Author&quot;)+ ggtitle(&quot;Authors I&#39;ve read multiple times&quot;) + theme_bw()  + theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust =0.5))</code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="what-do-my-readings-look-like" class="section level2">
+<h2>What do my readings look like?</h2>
+<pre class="r"><code>ggplot(calendar, aes(monthweek, weekdayf)) +
+  geom_tile(colour = &quot;white&quot;, aes(fill = genre_quorum)) +
+  facet_grid(year ~ monthf, scales = &quot;free&quot;) +
+  labs(x = &quot;Week of Month&quot;,
+       y = &quot;&quot;,
+       title = &quot;Finished Books Heatmap&quot;,
+       subtitle = &quot;Colored by book genre frequency&quot;,
+       fill = &quot;genre_quorum&quot;) + theme_bw() +  scale_fill_viridis_d() +theme(legend.position = &quot;none&quot;, axis.text.x = element_blank(), axis.ticks.x = element_blank())</code></pre>
+<p><img src="{{< blogdown/postref >}}index.en_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>If you’re interested in questions like, how does my ratings differ than the average or how many pages did I read last year, then try importing your csv into <a href="https://almoturg.com/bookstats/">Paul Klinger’s website</a>.</p>
+</div>
