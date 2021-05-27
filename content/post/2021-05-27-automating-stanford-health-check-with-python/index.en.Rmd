@@ -1,0 +1,61 @@
+---
+title: Automating Stanford Health Check with Python
+author: Adam Kirosingh
+date: '2021-05-27'
+slug: automating-stanford-health-check-with-python
+categories:
+  - Python
+  - Automation
+  - Stanford
+tags:
+  - Health Check
+  - COVID-19
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-05-27T09:23:45-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+Inspired by the book automate the boring stuff with python, I decided to try to make the Stanford Health Check as smooth as possible. In response to the Covid-19 outbreak, Stanford has made it mandatory to fill out a daily health check to record symptoms before going to campus. Along with this precaution there are weekly COVID-19 testing requirements.
+
+After finding myself frusturated with forgetting to fill out the daily health check and trying to fill it out on my smartphone while walking in, I decided to try use some python to fill out the form for me (as long as I'm not experiencing symptoms). 
+
+So you can find the project on [Github](https://github.com/akirosingh/Stanford_Health_Check). The requirements are:  
+
+
+- [python3](https://docs.python-guide.org/starting/install3/osx/)  
+
+- selenium  
+
+```
+    pip install selenium
+```
+  
+- [webdriver](https://chromedriver.chromium.org/)  
+
+I recommend putting this chromedriver.exe in your applications folder because that's what is in the script. If you save it somewhere else, just be sure to change the PATH = "/Applications/chromedriver" line in the HealthCheck_Github.py
+
+Then to run the script all you need to do is clone the repository onto your computer. Using terminal it looks like this:
+```
+git clone https://github.com/akirosingh/Stanford_Health_Check
+cd Stanford_Health_Check
+```
+
+Then to run the script just replacing the 3 arguments SUNetID, password, and building with your own information, but still in the ''.
+```
+python3 HealthCheck_Github.py 'SUNetID' 'password' 'building'
+```
+
+You should see a google chrome window open and slowly fill out the health check form after getting past the sunet ID shibboleth. If you change the default of the shibboleth to activate duo mobile then you'll just have to confirm the notification on your phone. There is a 30 second pause in the script to give you time to confirm the notification then it will fill out the health check form. There are pauses to give the webdriver time to load the page elements.
+
+There is also a tradeoff of convienience for security. If you put the python script in an alias to simplify running the code, then you do have your private password information unencrypted in your list of aliases. Also, ideally you don't want someone watching you run this code because your password is visible in terminal. If you have suggestions on best practices on going about this like recreating the security when logging into Stanford's clusters I'd love to hear it. 
+
+Another idea is to have this run on a chron job so that you don't have to depend on yourself actually running the command just confirming the log in notification at a scheduled time.
+
+Anyway I hope you find this project useful or instructive in learning to automate web browser interaction with selenium in python.
